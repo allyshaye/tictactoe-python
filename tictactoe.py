@@ -1,22 +1,11 @@
-# we need a board x
-# players = 1 human, 1 comp
-# human plays an X
-# per every play, game logic does the following:
-  # determines if there is three in a row?
-  # if there isn't 3 in a row, is there 2 in a row?
-  # if there is 2 in a row, play it
-      # if it's YOUR two in a row, this takes precedence over OPPONENTS.
-  # if there isn't 2 in a row, make a move on a row which you are already on!
-    # if it's the first play for you, pick a random spot.
-
-
+import random
 
 
 def create_board():
   board = [
-    ['x', 'o', 'x'],
-    ['-', 'o', '-'],
-    ['-', 'x', '-']
+    ['o', 'x', '-'],
+    ['-', 'x', '-'],
+    ['-', '-', '-']
   ]
   return board
 
@@ -36,10 +25,15 @@ def row_definitions(board):
 
 
 def audit_board(board_dict, tile):
-  results = { 3: [], 2: [], 1: [], 0: [] }
+  results = { 
+    3: [], 
+    2: [], 
+    1: [], 
+    0: [] 
+  }
 
-  for row_name, row in board_dict.items():
-    tile_count = row.count(tile)
+  for row_name, row_contents in board_dict.items():
+    tile_count = row_contents.count(tile)
     if tile_count == 3:
       results[3].append(row_name)
     elif tile_count == 2:
@@ -55,40 +49,54 @@ def audit_board(board_dict, tile):
 def game_over(results_dict):
   return True if results_dict[3] else False
 
-# needs work
-def determine_next_move(board_dict, self_results, opponent_results):
-  offense = False
-  defense = False
-  offensive_move = ''
-  defensive_move = ''
+# return row
+def move_on_twos(board_dict, row_list):
+  next_move = ''
+  for row in row_list:
+    row_contents = board_dict[row]
+    if '-' in row_contents:
+      next_move = row
+      break
+  return next_move
+
+def first_move(row_list):
+  return next_move = random.choice(row_list)
+
+
+# needs refactoring; returns ROW to play
+def determine_next_row(board_dict, self_results, opponent_results):
+  move_found = False
+  next_move = ''
 
   if self_results[2]:
-    for row in self_results[2]:
-      row_contents = board_dict[row]
-      if '-' in row_contents:
-        offense = True
-        offensive_move = row
-        break
+    next_move = move_on_twos(board_dict, self_results[2])
+    if next_move != '':
+      move_found = True
 
-  if opponent_results[2]:
-    for row in opponent_results[2]:
-      print(row)
-      row_contents = board_dict[row]
-      if '-' in row_contents:
-        defense = True
-        defensive_move = row
-        break
+  if opponent_results[2] and not move_found:
+    next_move = move_on_twos(board_dict, opponent_results[2])
+    if next_move != '':
+      move_found = True
 
-  if not offense and not defense:
-    print('we still false yo')
+  if not move_found:
+    if self_results[1]:
+      for row in self_results[1]:
+        if row.count('-') == 2:
+          move_found = True
+          next_move = row
+          break
 
-  if offense:
-    return offensive_move
-  else:
-    return defensive_move
+  if not move_found:
+    if self_results[0]:
+      next_move = first_move(self_results[0])
+      if next_move != '':
+        move_found = True # don't think i need this since it's the last check.
+
+  return next_move
 
 
-
+def determine_next_spot(board_dict, move):
+  pass
 
 
 
