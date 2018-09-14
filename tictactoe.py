@@ -10,58 +10,34 @@
     # if it's the first play for you, pick a random spot.
 
 
+
+
 def create_board():
   board = [
     ['x', 'o', 'x'],
-    ['x', 'o', '-'],
-    ['-', 'o', '-']
+    ['-', 'o', '-'],
+    ['-', 'x', '-']
   ]
   return board
 
 
-def top_row(board):
-  return board[0]
-
-def mid_row(board):
-  return board[1]
-
-def bottom_row(board):
-  return board[2]
-
-def left_col(board):
-  left_col = [board[0][0], board[1][0], board[2][0]]
-  return left_col
-
-def mid_col(board):
-  mid_col = [board[0][1], board[1][1], board[2][1]]
-  return mid_col
-
-def right_col(board):
-  right_col = [board[0][2], board[1][2], board[2][2]]
-  return right_col
-
-def diag_top_left_down(board):
-  diag = [board[0][0], board[1][1], board[2][2]]
-  return diag
-
-def diag_bot_left_up(board):
-  diag = [board[2][0], board[1][1], board[0][2]]
-  return diag
-
-
-def audit_board(board, tile):
+def row_definitions(board):
   board_dict = {
-    'top_row': top_row(board),
-    'mid_row': mid_row(board),
-    'bottom_row': bottom_row(board),
-    'left_col': left_col(board),
-    'mid_col': mid_col(board),
-    'right_col': right_col(board),
-    'diag_top_left_down': diag_top_left_down(board),
-    'diag_bot_left_up': diag_bot_left_up(board)
+    'top_row': board[0],
+    'mid_row': board[1],
+    'bottom_row': board[2],
+    'left_col': [board[0][0], board[1][0], board[2][0]],
+    'mid_col': [board[0][1], board[1][1], board[2][1]],
+    'right_col': [board[0][2], board[1][2], board[2][2]],
+    'diag_top_left_down': [board[0][0], board[1][1], board[2][2]],
+    'diag_bot_left_up': [board[2][0], board[1][1], board[0][2]]
   }
+  return board_dict
 
+
+def audit_board(board_dict, tile):
   results = { 3: [], 2: [], 1: [], 0: [] }
+
   for row_name, row in board_dict.items():
     tile_count = row.count(tile)
     if tile_count == 3:
@@ -76,12 +52,40 @@ def audit_board(board, tile):
   return results
 
 
-def game_over(results):
-  return True if results[3] else False
+def game_over(results_dict):
+  return True if results_dict[3] else False
 
+# needs work
+def determine_next_move(board_dict, self_results, opponent_results):
+  offense = False
+  defense = False
+  offensive_move = ''
+  defensive_move = ''
 
-# return row to play? given that we checked for game over.
-def determine_next_move(self_results, opponent_results):
+  if self_results[2]:
+    for row in self_results[2]:
+      row_contents = board_dict[row]
+      if '-' in row_contents:
+        offense = True
+        offensive_move = row
+        break
+
+  if opponent_results[2]:
+    for row in opponent_results[2]:
+      print(row)
+      row_contents = board_dict[row]
+      if '-' in row_contents:
+        defense = True
+        defensive_move = row
+        break
+
+  if not offense and not defense:
+    print('we still false yo')
+
+  if offense:
+    return offensive_move
+  else:
+    return defensive_move
 
 
 
