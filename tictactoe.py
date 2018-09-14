@@ -5,7 +5,7 @@
   # determines if there is three in a row?
   # if there isn't 3 in a row, is there 2 in a row?
   # if there is 2 in a row, play it
-      # this works to anyone's advantage -- if it's the opponents 2 in a row, you just blocked! if it's yours, you just won!
+      # if it's YOUR two in a row, this takes precedence over OPPONENTS.
   # if there isn't 2 in a row, make a move on a row which you are already on!
     # if it's the first play for you, pick a random spot.
 
@@ -75,6 +75,13 @@ def audit_board(board, tile):
 
   return results
 
+
+def game_over(results):
+  return True if results[3] else False
+
+
+# return row to play? given that we checked for game over.
+def determine_next_move(self_results, opponent_results):
 
 
 
