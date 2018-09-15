@@ -3,15 +3,10 @@ from tictactoe import *
 board = create_board()
 
 
-# for row in board:
-  # print(row)
-
 board_dictionary = row_definitions(board)
-# print(board_dict['left_col'])
-# for i,j in board_dict.items():
-#   print "%s ---- %s" %(i, j)
-results_o = audit_board(board_dictionary, 'o')
-results_x = audit_board(board_dictionary, 'x')
+
+results_o = check_board(board_dictionary, 'o')
+results_x = check_board(board_dictionary, 'x')
 
 # for i,j in results_x.items():
 #   print "%s ===== %s" %(i,j)
@@ -20,13 +15,9 @@ results_x = audit_board(board_dictionary, 'x')
 # print(results_x)
 # print(game_over(results_o))
 # print(game_over(results_x))
-nextt = determine_next_move(board_dictionary, results_o, results_x)
-print(nextt)
+next_row_data = determine_next_row(board_dictionary, results_x, results_o)
+# print(next_row)
+row_to_box_dict = row_to_box_defs()
+determine_next_box(row_to_box_dict, board, next_row_data, 'o')
 
-
-  # board = [
-  #   ['x', 'o', 'x'],
-  #   ['x', 'o', '-'],
-  #   ['-', 'x', 'x']
-  # ]
 
