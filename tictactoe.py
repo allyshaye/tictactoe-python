@@ -3,47 +3,33 @@ import random
 
 def create_board():
   board = [
-    ['x', 'x', 'o'],
+    ['x', 'x', '-'],
     ['x', 'o', '-'],
     ['o', '-', '-']
   ]
   return board
 
-# GOAL IS TO GET RID OF BOARD_DICT AND JUST USE ROW_TO_BOX_DEFS BISHH
-def row_definitions(board):
+
+def board_dictionary(board): #test
   board_dict = {
-    'top_row': board[0],
-    'mid_row': board[1],
-    'bottom_row': board[2],
-    'left_col': [board[0][0], board[1][0], board[2][0]],
-    'mid_col': [board[0][1], board[1][1], board[2][1]],
-    'right_col': [board[0][2], board[1][2], board[2][2]],
-    'diag_top_left_down': [board[0][0], board[1][1], board[2][2]],
-    'diag_bot_left_up': [board[2][0], board[1][1], board[0][2]]
+    'top_row': [[[0,0], [0,1], [0,2]], board[0]],
+    'mid_row': [[[1,0], [1,1], [1,2]], board[1]],
+    'bottom_row': [[[2,0], [2,1], [2,2]], board[2]],
+    'left_col': [[[0,0], [1,0], [2,0]], [board[0][0], board[1][0], board[2][0]]],
+    'mid_col': [[[0,1], [1,1], [2,1]], [board[0][1], board[1][1], board[2][1]]],
+    'right_col': [[[0,2], [1,2], [2,2]], [board[0][2], board[1][2], board[2][2]]],
+    'diag_top_left_down': [[[0,0], [1,1], [2,2]],[board[0][0], board[1][1], board[2][2]]],
+    'diag_bot_left_up': [[[2,0], [1,1], [0,2]],[board[2][0], board[1][1], board[0][2]]]
   }
+
   return board_dict
 
 
-def row_to_box_defs():
-  box_dict = {
-    'top_row': [[0,0], [0,1], [0,2]],
-    'mid_row': [[1,0], [1,1], [1,2]],
-    'bottom_row': [[2,0], [2,1], [2,2]],
-    'left_col': [[0,0], [1,0], [2,0]],
-    'mid_col': [[0,1], [1,1], [2,1]],
-    'right_col': [[0,2], [1,2], [2,2]],
-    'diag_top_left_down': [[0,0], [1,1], [2,2]],
-    'diag_bot_left_up': [[2,0], [1,1], [0,2]]
-  }
-
-  return box_dict
-
-
-def check_board(board_dict, tile):
+def check_board(board_dict, tile): #test
   results = { 3: [], 2: [], 1: [], 0: [] }
 
   for row_name, row_contents in board_dict.items():
-    tile_count = row_contents.count(tile)
+    tile_count = row_contents[1].count(tile) #added index
     if tile_count == 3:
       results[3].append(row_name)
     elif tile_count == 2:
@@ -52,7 +38,6 @@ def check_board(board_dict, tile):
       results [1].append(row_name)
     elif tile_count == 0:
       results[0].append(row_name)
-
   return results
 
 
@@ -63,7 +48,7 @@ def game_over(results_dict):
 def move_on_twos_row_choice(board_dict, row_list):
   next_move = ''
   for row in row_list:
-    row_contents = board_dict[row]
+    row_contents = board_dict[row][1] #added index
     if '-' in row_contents:
       next_move = row
       break
@@ -89,26 +74,26 @@ def determine_next_row(board_dict, self_results, opponent_results):
     available_spots = 1
     if next_row != '': row_found = True
 
-  if not row_found: # make 2 in a row
+  if not row_found:
     if self_results[1]:
       for row in self_results[1]:
-        row_contents = board_dict[row]
+        row_contents = board_dict[row][1] #added index
         if row_contents.count('-') == 2:
           row_found = True
           next_row = row
           available_spots = 2
           break
 
-  if not row_found: # play first move
-    avail_rows = self_results[1] + self_results[0]
-    next_row = random_row_choice(self_results[0])
-    available_spots = 3
+  if not row_found:
+    if self_results[0]:
+      next_row = random_row_choice(self_results[0])
+      available_spots = 3
 
   return [next_row, available_spots]
 
 
-def determine_next_box(row_box_dict, board, row_data, tile):
-  row_boxes = row_box_dict[row_data[0]]
+def determine_next_box(board_dict, board, row_data): #test
+  row_boxes = board_dict[row_data[0]][0]
   available_spots = row_data[1] 
 
   if available_spots == 1: 
@@ -126,9 +111,5 @@ def determine_next_box(row_box_dict, board, row_data, tile):
   if available_spots == 3:
     next_box = random.choice(row_boxes)
 
-  print(next_box)
   return next_box
-
-
-
 
