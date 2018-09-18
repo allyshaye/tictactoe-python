@@ -1,11 +1,21 @@
-from tictactoe import *
-
-board = create_board()
-
 board_dictionary = board_dictionary(board)
 
-results_o = check_board(board_dictionary, 'o')
-results_x = check_board(board_dictionary, 'x')
-next_row_data = determine_next_row(board_dictionary, results_x, results_o)
-print(determine_next_box(board_dictionary, board, next_row_data))
+current_tile = 'x'
+opponent_tile = 'o'
 
+game_over = False
+
+while not game_over:
+  make_move(current_tile, opponent_tile, board_dictionary, board)
+          
+  print("--------------") 
+  for row in board:
+    print(row)
+  results = check_board(board_dictionary, current_tile) 
+  if results[3] or full_board(board): 
+    print "Game Over! Winner = %s Loser = %s" %(current_tile, opponent_tile)
+    game_over = True  
+
+  placeholder = current_tile
+  current_tile = opponent_tile
+  opponent_tile = placeholder
