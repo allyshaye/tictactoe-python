@@ -25,11 +25,12 @@ def board_dictionary(board):
   return board_dict
 
 
-def check_board(board_dict, tile):
+def check_board(board_dict, tile): 
   results = { 3: [], 2: [], 1: [], 0: [] }
 
   for row_name, row_contents in board_dict.items():
-    tile_count = row_contents[1].count(tile)
+    tile_count = row_contents[1].count(tile) 
+
     if tile_count == 3:
       results[3].append(row_name)
     elif tile_count == 2:
